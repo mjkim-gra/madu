@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>!KAOs — Q3. 단백질 합성 순서 배열</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=DM+Mono:wght@400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --black: #111111;
+    --orange: #e84c0e;
+    --gray-f: #f5f5f3;
+    --gray-e: #e8e8e4;
+    --gray-c: #c0bfb8;
+    --gray-8: #888880;
+    --green: #1a6b3c;
+    --red: #c8280a;
+    --r: 6px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--black);
+    font-family: 'Noto Serif KR', serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── HEADER ── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 48px;
+    border-bottom: 1px solid var(--gray-e);
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 10;
+  }
+
+  /* ── LOGO — SVG-style bold mark ── */
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0px;
+    line-height: 1;
+  }
+
+  .logo-mark {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    margin-right: 2px;
+  }
+
+  /* The ■ square block */
+  .logo-sq {
+    width: 11px;
+    height: 22px;
+    background: var(--black);
+    border-radius: 1px;
+    flex-shrink: 0;
+  }
+
+  /* The ! dot */
+  .logo-dot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+  }
+  .logo-dot-bar {
+    width: 10px;
+    height: 14px;
+    background: var(--black);
+    border-radius: 1px;
+  }
+  .logo-dot-ball {
+    width: 10px;
+    height: 10px;
+    background: var(--black);
+    border-radius: 2px;
+  }
+
+  .logo-text {
+    font-family: 'Bebas Neue', 'DM Mono', monospace;
+    font-size: 32px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: var(--black);
+    line-height: 1;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .topic-chip {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--gray-8);
+    text-transform: uppercase;
+  }
+
+  .hbadge {
+    background: var(--black);
+    color: #fff;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    padding: 5px 11px;
+    border-radius: 40px;
+  }
+
+  /* ── MAIN 2-COL LAYOUT ── */
+  main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 440px;
+    max-width: 1160px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 56px 48px 80px;
+    align-items: start;
+    gap: 0;
+  }
+
+  /* ── LEFT: QUESTION ── */
+  .q-col {
+    padding-right: 64px;
+    border-right: 1px solid var(--gray-e);
+  }
+
+  .q-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .q-lv {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--orange);
+    background: #fdf0ea;
+    padding: 5px 13px;
+    border-radius: 40px;
+    letter-spacing: 0.5px;
+  }
+
+  .q-type {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--gray-c);
+    letter-spacing: 0.5px;
+  }
+
+  .q-bignum {
+    font-family: 'DM Mono', monospace;
+    font-size: 96px;
+    color: var(--gray-e);
+    line-height: 1;
+    letter-spacing: -4px;
+    margin-bottom: 16px;
+  }
+
+  .q-text {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.45;
+    letter-spacing: -0.8px;
+    color: var(--black);
+    margin-bottom: 20px;
+  }
+
+  .q-desc {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--gray-8);
+    line-height: 1.75;
+    margin-bottom: 40px;
+  }
+
+  .instruction {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--gray-f);
+    border-radius: var(--r);
+    padding: 16px 18px;
+    margin-bottom: 0;
+  }
+
+  .instr-text {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--gray-8);
+    line-height: 1.7;
+  }
+
+  /* ── FEEDBACK PANEL (left col) ── */
+  .feedback {
+    display: none;
+    margin-top: 36px;
+    border-radius: 10px;
+    overflow: hidden;
+    animation: fadeIn .4s ease;
+  }
+  .feedback.ok { background: #edf7f1; border: 1.5px solid #b8dfc8; }
+  .feedback.ng { background: #fef0ec; border: 1.5px solid #f0bcb0; }
+
+  @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+  .fb-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 24px 14px;
+  }
+
+  .fb-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    color: #fff;
+    flex-shrink: 0;
+    font-weight: 700;
+  }
+  .fb-icon.ok { background: var(--green); }
+  .fb-icon.ng { background: var(--red); }
+
+  .fb-label {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+  }
+  .fb-label.ok { color: var(--green); }
+  .fb-label.ng { color: var(--red); }
+
+  .fb-body { padding: 0 24px 22px; }
+
+  .fb-sec {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--orange);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .fb-text {
+    font-size: 14px;
+    font-weight: 300;
+    color: #444;
+    line-height: 1.8;
+    margin-bottom: 14px;
+  }
+
+  .fb-hint {
+    background: rgba(255,255,255,0.7);
+    border-left: 3px solid var(--orange);
+    border-radius: 0 var(--r) var(--r) 0;
+    padding: 12px 16px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--black);
+  }
+
+  /* ── RIGHT: SEQUENCE ── */
+  .seq-col {
+    padding-left: 56px;
+    position: sticky;
+    top: 80px;
+  }
+
+  .seq-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .seq-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--gray-c);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .btn-reset-small {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--gray-8);
+    background: none;
+    border: 1px solid var(--gray-e);
+    padding: 5px 12px;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: border-color .15s, color .15s;
+  }
+  .btn-reset-small:hover { border-color: var(--black); color: var(--black); }
+
+  /* SCORE ROW */
+  .score-row {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: var(--r);
+    margin-bottom: 14px;
+  }
+  .score-row.ok { background: #edf7f1; display: flex; }
+  .score-row.ng { background: #fef0ec; display: flex; }
+
+  .score-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 22px;
+    font-weight: 500;
+  }
+  .score-num em { color: var(--orange); font-style: normal; }
+  .score-msg { font-size: 13px; color: var(--gray-8); font-weight: 300; }
+
+  /* ANSWER REF */
+  .answer-ref {
+    display: none;
+    background: var(--gray-f);
+    border-radius: var(--r);
+    padding: 12px 16px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--gray-8);
+    font-weight: 300;
+  }
+  .answer-ref strong { color: var(--black); font-weight: 600; }
+
+  /* THE LIST */
+  .seq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .seq-item {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid var(--gray-e);
+    border-radius: var(--r);
+    background: var(--bg);
+    cursor: grab;
+    user-select: none;
+    transition: border-color .15s, box-shadow .15s, transform .1s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .seq-item:hover:not(.locked) {
+    border-color: var(--gray-c);
+    box-shadow: 0 2px 12px rgba(0,0,0,.06);
+  }
+  .seq-item:active { cursor: grabbing; }
+  .seq-item.dragging {
+    opacity: .5;
+    box-shadow: 0 12px 32px rgba(0,0,0,.14);
+    border-color: var(--orange);
+  }
+  .seq-item.drag-over {
+    border-color: var(--orange);
+    background: #fdf5f2;
+    transform: scaleX(1.01);
+  }
+  .seq-item.correct  { border-color: var(--green); background: #edf7f1; }
+  .seq-item.incorrect { border-color: var(--red);  background: #fef0ec; }
+  .seq-item.locked { cursor: default; }
+
+  .seq-pos {
+    width: 42px;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--gray-c);
+    border-right: 1px solid var(--gray-e);
+    flex-shrink: 0;
+    transition: background .15s;
+  }
+  .seq-item.correct  .seq-pos { border-color: #b8dfc8; background: #dff0e7; color: var(--green); font-weight: 500; }
+  .seq-item.incorrect .seq-pos { border-color: #f0bcb0; background: #fde0d8; color: var(--red); font-weight: 500; }
+
+  .seq-badge {
+    width: 38px;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--orange);
+    flex-shrink: 0;
+  }
+  .seq-item.correct  .seq-badge { color: var(--green); }
+  .seq-item.incorrect .seq-badge { color: var(--red); }
+
+  .seq-text {
+    flex: 1;
+    padding: 16px 12px 16px 2px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--black);
+  }
+
+  .seq-handle {
+    width: 36px;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-e);
+    font-size: 16px;
+    flex-shrink: 0;
+    cursor: grab;
+    transition: color .15s;
+  }
+  .seq-item:hover .seq-handle { color: var(--gray-c); }
+  .seq-item.locked .seq-handle { display: none; }
+
+  .seq-check-icon {
+    width: 36px;
+    height: 54px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+    font-weight: 700;
+  }
+  .seq-item.correct  .seq-check-icon { display: flex; color: var(--green); }
+  .seq-item.incorrect .seq-check-icon { display: flex; color: var(--red); }
+
+  /* ── BUTTONS ── */
+  .actions { display: flex; gap: 10px; }
+
+  .btn-check {
+    flex: 1;
+    background: var(--black);
+    color: #fff;
+    border: none;
+    padding: 16px 24px;
+    border-radius: var(--r);
+    font-family: 'Noto Serif KR', serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: -0.3px;
+    transition: opacity .15s;
+  }
+  .btn-check:hover:not(:disabled) { opacity: .85; }
+  .btn-check:disabled { background: var(--gray-c); cursor: not-allowed; }
+
+  .btn-retry {
+    background: var(--bg);
+    color: var(--black);
+    border: 1.5px solid var(--black);
+    padding: 16px 22px;
+    border-radius: var(--r);
+    font-family: 'Noto Serif KR', serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    display: none;
+    white-space: nowrap;
+    transition: background .15s;
+  }
+  .btn-retry:hover { background: var(--gray-f); }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <!-- Logo replicating the uploaded !KAOs bold mark -->
+  <div class="logo">
+    <div class="logo-mark">
+      <div class="logo-dot">
+        <div class="logo-dot-bar"></div>
+        <div class="logo-dot-ball"></div>
+      </div>
+      <div class="logo-sq"></div>
+    </div>
+    <span class="logo-text">KAOs</span>
+  </div>
+
+  <div class="header-right">
+    <span class="topic-chip">분자생물학 · 단백질 합성</span>
+    <div class="hbadge">QUIZ</div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── LEFT: QUESTION PANEL ── -->
+  <div class="q-col">
+    <div class="q-meta">
+      <span class="q-lv">Lv 2 · 관계 이해</span>
+      <span class="q-type">순서 배열형</span>
+    </div>
+
+    <div class="q-bignum">03</div>
+
+    <h1 class="q-text">단백질이 만들어지는 과정을<br>올바른 순서로 배열하세요.</h1>
+
+    <p class="q-desc">
+      아래 5개의 단계는 단백질 합성 과정을 구성하는 핵심 사건들입니다.<br>
+      이 사건들이 실제로 일어나는 논리적 순서를 찾아 배열해 보세요.
+    </p>
+
+    <div class="instruction">
+      <div class="instr-text">
+        🖱️ &nbsp;<strong>드래그 앤 드롭</strong>으로 항목을 원하는 위치로 옮겨 순서를 정렬하세요.<br>
+        순서가 정해지면 <strong>정답 확인</strong> 버튼을 클릭합니다.
+      </div>
+    </div>
+
+    <!-- ── FEEDBACK (correct) ── -->
+    <div class="feedback ok" id="fb-ok">
+      <div class="fb-header">
+        <div class="fb-icon ok">✓</div>
+        <div class="fb-label ok">정답이에요!</div>
+      </div>
+      <div class="fb-body">
+        <div class="fb-sec">왜 정답인가?</div>
+        <div class="fb-text">
+          단백질 합성은 명확한 인과 순서를 따릅니다.<br><br>
+          카복실기+아미노기 반응 <strong>(B)</strong> → 물 분자 방출·펩타이드 결합 <strong>(C)</strong> → 반복으로 폴리펩타이드 형성 <strong>(E)</strong> → 합성 완료 후 접힘 <strong>(A)</strong> → 구조가 기능을 결정 <strong>(D)</strong>.<br><br>
+          <strong>'합성이 먼저, 접힘은 나중'</strong>이라는 순서가 핵심입니다.
+        </div>
+        <div class="fb-hint">
+          💡 합성(공유결합, 에너지 필요)과 접힘(수소결합, 에너지 불필요)은 시점도 성격도 다른 별개의 과정입니다.
+        </div>
+      </div>
+    </div>
+
+    <!-- ── FEEDBACK (incorrect) ── -->
+    <div class="feedback ng" id="fb-ng">
+      <div class="fb-header">
+        <div class="fb-icon ng">✕</div>
+        <div class="fb-label ng">다시 생각해봐요</div>
+      </div>
+      <div class="fb-body">
+        <div class="fb-sec">왜 오답인가?</div>
+        <div class="fb-text">
+          접힘(A)을 결합(C/E)보다 앞에 배치한 경우, <strong>접힘은 긴 폴리펩타이드가 완성된 이후에야 일어난다</strong>는 점을 놓친 것입니다.<br><br>
+          합성(공유결합, 에너지 필요)과 접힘(수소결합, 에너지 불필요)은 시점도 성격도 다른 별개의 과정입니다.
+        </div>
+        <div class="fb-hint">
+          📖 본문에서 '기다란 폴리펩타이드는 <strong>합성된 후</strong> 에너지적으로 안정한 구조로 접힌다' 문장을 찾아보세요.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── RIGHT: SEQUENCE PANEL ── -->
+  <div class="seq-col">
+    <div class="seq-header">
+      <span class="seq-label">순서 배열</span>
+      <button class="btn-reset-small" id="btn-reset-sm" onclick="resetSeq()">↺ 초기화</button>
+    </div>
+
+    <!-- SCORE ROW -->
+    <div class="score-row" id="score-row">
+      <div class="score-num"><em id="score-num">0</em>/5</div>
+      <div class="score-msg" id="score-msg"></div>
+    </div>
+
+    <!-- ANSWER REF -->
+    <div class="answer-ref" id="answer-ref">
+      <strong>정답 순서:</strong> &nbsp;B → C → E → A → D
+    </div>
+
+    <!-- LIST -->
+    <div class="seq-list" id="seq-list"></div>
+
+    <div class="actions">
+      <button class="btn-check" id="btn-check" onclick="checkAnswer()" disabled>정답 확인</button>
+      <button class="btn-retry" id="btn-retry" onclick="resetSeq()">↺ 다시 풀기</button>
+    </div>
+  </div>
+
+</main>
+
+<script>
+const ITEMS = [
+  { key:"A", text:"폴리펩타이드가 에너지적으로 안정한 구조로 접힌다" },
+  { key:"B", text:"아미노산의 카복실기와 다음 아미노산의 아미노기가 반응한다" },
+  { key:"C", text:"물 분자가 빠져나오며 펩타이드 결합이 형성된다" },
+  { key:"D", text:"2차 및 3차 구조를 갖춘 단백질이 특정 기능을 수행한다" },
+  { key:"E", text:"반응이 반복되어 긴 폴리펩타이드가 만들어진다" }
+];
+const ANSWER = ["B","C","E","A","D"];
+
+let dragSrc = null;
+let checked = false;
+
+/* ── 초기 렌더 ── */
+function initSeq() {
+  const list = document.getElementById('seq-list');
+  list.innerHTML = '';
+  checked = false;
+
+  const shuffled = [...ITEMS].sort(() => Math.random() - 0.5);
+
+  shuffled.forEach((item, idx) => {
+    const el = document.createElement('div');
+    el.className = 'seq-item';
+    el.draggable = true;
+    el.dataset.key = item.key;
+    el.innerHTML = `
+      <div class="seq-pos">${idx + 1}</div>
+      <div class="seq-badge">${item.key}</div>
+      <div class="seq-text">${item.text}</div>
+      <div class="seq-handle">⠿</div>
+      <div class="seq-check-icon"></div>
+    `;
+
+    el.addEventListener('dragstart', e => {
+      if (checked) return;
+      dragSrc = el;
+      setTimeout(() => el.classList.add('dragging'), 0);
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    el.addEventListener('dragend', () => {
+      el.classList.remove('dragging');
+      list.querySelectorAll('.seq-item').forEach(s => s.classList.remove('drag-over'));
+      reNumber();
+    });
+    el.addEventListener('dragover', e => {
+      if (checked) return;
+      e.preventDefault();
+      list.querySelectorAll('.seq-item').forEach(s => s.classList.remove('drag-over'));
+      if (el !== dragSrc) el.classList.add('drag-over');
+    });
+    el.addEventListener('dragleave', () => el.classList.remove('drag-over'));
+    el.addEventListener('drop', e => {
+      e.preventDefault();
+      if (checked || !dragSrc || dragSrc === el) return;
+      const its = [...list.querySelectorAll('.seq-item')];
+      const fi = its.indexOf(dragSrc), ti = its.indexOf(el);
+      if (fi < ti) list.insertBefore(dragSrc, el.nextSibling);
+      else list.insertBefore(dragSrc, el);
+      el.classList.remove('drag-over');
+      reNumber();
+      document.getElementById('btn-check').disabled = false;
+    });
+
+    list.appendChild(el);
+  });
+
+  // UI 초기화
+  document.getElementById('btn-check').disabled = true;
+  document.getElementById('btn-check').style.display = '';
+  document.getElementById('btn-retry').style.display = 'none';
+  document.getElementById('btn-reset-sm').style.display = '';
+  document.getElementById('fb-ok').style.display = 'none';
+  document.getElementById('fb-ng').style.display = 'none';
+  document.getElementById('score-row').className = 'score-row';
+  document.getElementById('answer-ref').style.display = 'none';
+}
+
+function reNumber() {
+  document.querySelectorAll('#seq-list .seq-item').forEach((el, i) => {
+    el.querySelector('.seq-pos').textContent = i + 1;
+  });
+}
+
+/* ── 정답 확인 ── */
+function checkAnswer() {
+  if (checked) return;
+  checked = true;
+
+  const list = document.getElementById('seq-list');
+  const items = [...list.querySelectorAll('.seq-item')];
+  const order = items.map(e => e.dataset.key);
+  let correctCount = 0;
+
+  items.forEach((el, i) => {
+    const right = el.dataset.key === ANSWER[i];
+    if (right) correctCount++;
+    el.classList.add('locked', right ? 'correct' : 'incorrect');
+    el.draggable = false;
+    const chk = el.querySelector('.seq-check-icon');
+    if (chk) chk.textContent = right ? '✓' : '✕';
+  });
+
+  const isAllCorrect = correctCount === 5;
+
+  // 피드백 표시
+  if (isAllCorrect) {
+    document.getElementById('fb-ok').style.display = '';
+    document.getElementById('fb-ok').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  } else {
+    document.getElementById('fb-ng').style.display = '';
+    document.getElementById('answer-ref').style.display = '';
+    document.getElementById('fb-ng').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // 점수 뱃지
+  const msgs = ['처음이라 괜찮아요.', '거의 다 왔어요!', '절반은 맞았어요.', '꽤 잘 하셨어요!', '아주 잘 하셨어요!', '완벽합니다!'];
+  document.getElementById('score-num').textContent = correctCount;
+  document.getElementById('score-msg').textContent = msgs[correctCount];
+  const scoreRow = document.getElementById('score-row');
+  scoreRow.className = 'score-row ' + (isAllCorrect ? 'ok' : 'ng');
+
+  // 버튼 전환
+  document.getElementById('btn-check').style.display = 'none';
+  document.getElementById('btn-reset-sm').style.display = 'none';
+  document.getElementById('btn-retry').style.display = '';
+}
+
+/* ── 다시 풀기 ── */
+function resetSeq() {
+  initSeq();
+}
+
+/* ── 초기화 ── */
+initSeq();
+</script>
+</body>
+</html>

@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>!KAOs — Q6. 외계 생명체 시나리오</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=DM+Mono:wght@400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --black: #111111;
+    --orange: #e84c0e;
+    --gray-f: #f5f5f3;
+    --gray-e: #e8e8e4;
+    --gray-c: #c0bfb8;
+    --gray-8: #888880;
+    --green: #1a6b3c;
+    --red: #c8280a;
+    --r: 6px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--black);
+    font-family: 'Noto Serif KR', serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── HEADER ── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 48px;
+    border-bottom: 1px solid var(--gray-e);
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 10;
+  }
+
+  .logo { display: flex; align-items: center; gap: 0; line-height: 1; }
+  .logo-mark { display: flex; align-items: center; gap: 3px; margin-right: 2px; }
+  .logo-sq { width: 11px; height: 22px; background: var(--black); border-radius: 1px; flex-shrink: 0; }
+  .logo-dot { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .logo-dot-bar { width: 10px; height: 14px; background: var(--black); border-radius: 1px; }
+  .logo-dot-ball { width: 10px; height: 10px; background: var(--black); border-radius: 2px; }
+  .logo-text { font-family: 'Bebas Neue', 'DM Mono', monospace; font-size: 32px; font-weight: 400; letter-spacing: 1px; color: var(--black); line-height: 1; }
+
+  .header-right { display: flex; align-items: center; gap: 20px; }
+  .topic-chip { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 1.5px; color: var(--gray-8); text-transform: uppercase; }
+  .hbadge { background: var(--black); color: #fff; font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1.5px; padding: 5px 11px; border-radius: 40px; }
+
+  /* ── MAIN ── */
+  main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 480px;
+    max-width: 1160px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 56px 48px 80px;
+    align-items: start;
+    gap: 0;
+  }
+
+  /* ── LEFT ── */
+  .q-col {
+    padding-right: 64px;
+    border-right: 1px solid var(--gray-e);
+  }
+
+  .q-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+  .q-lv { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--orange); background: #fdf0ea; padding: 5px 13px; border-radius: 40px; letter-spacing: 0.5px; }
+  .q-type { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gray-c); letter-spacing: 0.5px; }
+  .q-bignum { font-family: 'DM Mono', monospace; font-size: 96px; color: var(--gray-e); line-height: 1; letter-spacing: -4px; margin-bottom: 16px; }
+  .q-text { font-size: 26px; font-weight: 700; line-height: 1.45; letter-spacing: -0.8px; color: var(--black); margin-bottom: 20px; }
+  .q-desc { font-size: 14px; font-weight: 300; color: var(--gray-8); line-height: 1.75; margin-bottom: 32px; }
+
+  /* SCENARIO BOX */
+  .scenario-box {
+    background: var(--gray-f);
+    border-left: 3px solid var(--orange);
+    border-radius: 0 var(--r) var(--r) 0;
+    padding: 20px 22px;
+    margin-bottom: 32px;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.85;
+    color: #444;
+    font-style: italic;
+  }
+
+  .instruction {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--gray-f);
+    border-radius: var(--r);
+    padding: 16px 18px;
+  }
+  .instr-text { font-size: 13px; font-weight: 300; color: var(--gray-8); line-height: 1.7; }
+
+  /* ── FEEDBACK ── */
+  .feedback {
+    display: none;
+    margin-top: 36px;
+    border-radius: 10px;
+    overflow: hidden;
+    animation: fadeIn .4s ease;
+  }
+  .feedback.ok { background: #edf7f1; border: 1.5px solid #b8dfc8; }
+  .feedback.ng { background: #fef0ec; border: 1.5px solid #f0bcb0; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+  .fb-header { display: flex; align-items: center; gap: 12px; padding: 20px 24px 14px; }
+  .fb-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; color: #fff; flex-shrink: 0; font-weight: 700; }
+  .fb-icon.ok { background: var(--green); }
+  .fb-icon.ng { background: var(--red); }
+  .fb-label { font-size: 18px; font-weight: 700; letter-spacing: -0.4px; }
+  .fb-label.ok { color: var(--green); }
+  .fb-label.ng { color: var(--red); }
+  .fb-body { padding: 0 24px 22px; }
+  .fb-sec { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: var(--orange); text-transform: uppercase; margin-bottom: 8px; }
+  .fb-text { font-size: 14px; font-weight: 300; color: #444; line-height: 1.8; margin-bottom: 14px; }
+  .fb-hint { background: rgba(255,255,255,0.7); border-left: 3px solid var(--orange); border-radius: 0 var(--r) var(--r) 0; padding: 12px 16px; font-size: 13px; line-height: 1.7; color: var(--black); }
+
+  /* ── RIGHT: FILL PANEL ── */
+  .fill-col {
+    padding-left: 56px;
+    position: sticky;
+    top: 80px;
+  }
+
+  .fill-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .fill-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--gray-c);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .btn-reset-small {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--gray-8);
+    background: none;
+    border: 1px solid var(--gray-e);
+    padding: 5px 12px;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: border-color .15s, color .15s;
+  }
+  .btn-reset-small:hover { border-color: var(--black); color: var(--black); }
+
+  /* SENTENCE */
+  .fill-sentence-wrap {
+    background: var(--gray-f);
+    border-radius: 8px;
+    padding: 24px 22px;
+    margin-bottom: 20px;
+  }
+
+  .fill-sentence {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 2.6;
+    color: var(--black);
+  }
+
+  /* BLANK BUTTON GROUP */
+  .blank-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: white;
+    border: 1.5px solid var(--gray-e);
+    border-radius: 6px;
+    padding: 3px;
+    vertical-align: middle;
+    margin: 0 3px;
+    transition: border-color .15s;
+  }
+  .blank-group.selected { border-color: var(--black); }
+  .blank-group.correct  { border-color: var(--green); background: #edf7f1; }
+  .blank-group.incorrect { border-color: var(--red);  background: #fef0ec; }
+  .blank-group.locked { pointer-events: none; }
+
+  .blank-opt {
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--gray-8);
+    transition: background .15s, color .15s;
+    border: none;
+    background: transparent;
+    white-space: nowrap;
+  }
+
+  .blank-opt:hover { background: var(--gray-e); color: var(--black); }
+  .blank-opt.picked {
+    background: var(--black);
+    color: white;
+    border-radius: 4px;
+  }
+
+  /* After check */
+  .blank-group.correct  .blank-opt.picked { background: var(--green); color: white; }
+  .blank-group.incorrect .blank-opt.picked { background: var(--red); color: white; }
+  .blank-group.correct  .blank-opt:not(.picked) { color: var(--gray-c); }
+  .blank-group.incorrect .blank-opt:not(.picked) { color: var(--gray-c); }
+
+  .blank-divider {
+    width: 1px;
+    height: 18px;
+    background: var(--gray-e);
+    flex-shrink: 0;
+  }
+
+  /* RESULT ROW */
+  .result-row {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: var(--r);
+    margin-bottom: 16px;
+  }
+  .result-row.ok { display: flex; background: #edf7f1; }
+  .result-row.ng { display: flex; background: #fef0ec; }
+  .result-num { font-family: 'DM Mono', monospace; font-size: 22px; font-weight: 500; }
+  .result-num em { color: var(--orange); font-style: normal; }
+  .result-msg { font-size: 13px; color: var(--gray-8); font-weight: 300; }
+
+  /* ANSWER REF */
+  .answer-ref {
+    display: none;
+    background: var(--gray-f);
+    border-radius: var(--r);
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--gray-8);
+    font-weight: 300;
+  }
+  .answer-ref strong { color: var(--black); font-weight: 600; }
+
+  /* ACTIONS */
+  .actions { display: flex; gap: 10px; margin-top: 4px; }
+
+  .btn-check {
+    flex: 1;
+    background: var(--black);
+    color: #fff;
+    border: none;
+    padding: 16px 24px;
+    border-radius: var(--r);
+    font-family: 'Noto Serif KR', serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: -0.3px;
+    transition: opacity .15s;
+  }
+  .btn-check:hover:not(:disabled) { opacity: .85; }
+  .btn-check:disabled { background: var(--gray-c); cursor: not-allowed; }
+
+  .btn-retry {
+    background: var(--bg);
+    color: var(--black);
+    border: 1.5px solid var(--black);
+    padding: 16px 22px;
+    border-radius: var(--r);
+    font-family: 'Noto Serif KR', serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    display: none;
+    white-space: nowrap;
+    transition: background .15s;
+  }
+  .btn-retry:hover { background: var(--gray-f); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-mark">
+      <div class="logo-dot">
+        <div class="logo-dot-bar"></div>
+        <div class="logo-dot-ball"></div>
+      </div>
+      <div class="logo-sq"></div>
+    </div>
+    <span class="logo-text">KAOs</span>
+  </div>
+  <div class="header-right">
+    <span class="topic-chip">분자생물학 · 단백질 합성</span>
+    <div class="hbadge">QUIZ</div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── LEFT: QUESTION PANEL ── -->
+  <div class="q-col">
+    <div class="q-meta">
+      <span class="q-lv">Lv 3 · 적용 · 전이</span>
+      <span class="q-type">빈칸 택 1형</span>
+    </div>
+
+    <div class="q-bignum">06</div>
+
+    <h1 class="q-text">외계 생명체가 만들 수 있는<br>단백질 다양성은?</h1>
+
+    <p class="q-desc">
+      학습한 원리를 새로운 맥락에 대입해<br>
+      빈칸에 들어갈 알맞은 답을 선택하세요.
+    </p>
+
+    <!-- SCENARIO -->
+    <div class="scenario-box">
+      외계 생명체가 발견되었다. 이 생명체도 지구와 마찬가지로 단백질을 사용하지만,
+      기본 아미노산의 종류가 단 <strong>5가지</strong>뿐이다. 이 생명체가 100개의 아미노산으로 이루어진
+      폴리펩타이드를 만든다고 가정할 때, 이론적으로 가능한 조합의 수는
+      지구 생명체의 경우(20¹⁰⁰)와 비교했을 때 어떻게 다른가?
+    </div>
+
+    <div class="instruction">
+      <div class="instr-text">
+        🖱️ &nbsp;오른쪽 문장에서 각 빈칸의 <strong>두 선택지 중 하나를 클릭</strong>하여 고르세요.<br>
+        세 빈칸을 모두 선택하면 <strong>정답 확인</strong> 버튼이 활성화됩니다.
+      </div>
+    </div>
+
+    <!-- FEEDBACK: CORRECT -->
+    <div class="feedback ok" id="fb-ok">
+      <div class="fb-header">
+        <div class="fb-icon ok">✓</div>
+        <div class="fb-label ok">정답이에요!</div>
+      </div>
+      <div class="fb-body">
+        <div class="fb-sec">왜 정답인가?</div>
+        <div class="fb-text">
+          아미노산 종류 수(n) → 폴리펩타이드 조합 수(nˡᵉⁿᵍᵗʰ) → 단백질 다양성 → 생화학 기능의 다양성.<br><br>
+          이 인과 사슬이 본문 전체를 관통하는 핵심 논리입니다. <strong>5¹⁰⁰</strong>과 <strong>20¹⁰⁰</strong>의 차이는
+          단순 20배가 아니라 지수적 차이이므로, 생화학적 역량의 격차는 상상을 초월합니다.
+        </div>
+        <div class="fb-hint">
+          💡 기본 단위체 종류 수가 조합의 수에 <strong>지수적으로</strong> 영향을 미친다는 원리가 핵심입니다.
+        </div>
+      </div>
+    </div>
+
+    <!-- FEEDBACK: INCORRECT -->
+    <div class="feedback ng" id="fb-ng">
+      <div class="fb-header">
+        <div class="fb-icon ng">✕</div>
+        <div class="fb-label ng">다시 생각해봐요</div>
+      </div>
+      <div class="fb-body">
+        <div class="fb-sec">왜 오답인가?</div>
+        <div class="fb-text">
+          "조합 수가 비슷하다"고 판단한 경우, <strong>지수 계산에서 밑(base)의 차이가 지수적으로 증폭</strong>된다는
+          점을 놓친 것입니다.<br><br>
+          5와 20은 4배 차이지만, 100제곱 후에는 20¹⁰⁰ ÷ 5¹⁰⁰ = 4¹⁰⁰, 즉 약 <strong>10⁶⁰ 배</strong>의 차이가 생깁니다.
+          기본 단위체의 종류 수는 산술적이 아닌 지수적으로 다양성에 영향을 줍니다.
+        </div>
+        <div class="fb-hint">
+          📖 본문의 4¹⁰⁰ vs 20¹⁰⁰ 계산 예시와 지수적 증가 원리를 다시 확인해 보세요.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── RIGHT: FILL PANEL ── -->
+  <div class="fill-col">
+    <div class="fill-header">
+      <span class="fill-label">빈칸 채우기</span>
+      <button class="btn-reset-small" id="btn-reset-sm" onclick="resetFill()">↺ 초기화</button>
+    </div>
+
+    <!-- RESULT ROW -->
+    <div class="result-row" id="result-row">
+      <div class="result-num"><em id="result-num">0</em>/3</div>
+      <div class="result-msg" id="result-msg"></div>
+    </div>
+
+    <!-- ANSWER REF -->
+    <div class="answer-ref" id="answer-ref">
+      <strong>정답:</strong> &nbsp;5¹⁰⁰ &nbsp;/&nbsp; 낮은 &nbsp;/&nbsp; 종류
+    </div>
+
+    <!-- FILL SENTENCE -->
+    <div class="fill-sentence-wrap">
+      <div class="fill-sentence" id="fill-sentence">
+        <!-- rendered by JS -->
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-check" id="btn-check" onclick="checkAnswer()" disabled>정답 확인</button>
+      <button class="btn-retry" id="btn-retry" onclick="resetFill()">↺ 다시 풀기</button>
+    </div>
+  </div>
+
+</main>
+
+<script>
+/* ── 문제 데이터 ── */
+const BLANKS = [
+  {
+    id: 0,
+    opts: ["5¹⁰⁰", "6¹⁰⁰"],
+    correct: "5¹⁰⁰"
+  },
+  {
+    id: 1,
+    opts: ["낮은", "높은"],
+    correct: "낮은"
+  },
+  {
+    id: 2,
+    opts: ["종류", "형태"],
+    correct: "종류"
+  }
+];
+
+/* sentence segments: text | blank(id) */
+const SEGMENTS = [
+  { type: "text", val: "이 외계 생명체가 만들 수 있는 폴리펩타이드의 이론적 조합 수는 " },
+  { type: "blank", id: 0 },
+  { type: "text", val: " 이며, 이는 지구 생명체보다 훨씬 " },
+  { type: "blank", id: 1 },
+  { type: "text", val: " 다양성을 가진다. 따라서 이 생명체가 수행할 수 있는 생화학적 기능의 " },
+  { type: "blank", id: 2 },
+  { type: "text", val: " 도 지구 생명체에 비해 크게 제한될 것이다." }
+];
+
+/* ── 상태 ── */
+const picks = { 0: null, 1: null, 2: null };
+let checked = false;
+
+/* ── 렌더 ── */
+function render() {
+  const container = document.getElementById('fill-sentence');
+  container.innerHTML = '';
+
+  SEGMENTS.forEach(seg => {
+    if (seg.type === 'text') {
+      container.appendChild(document.createTextNode(seg.val));
+    } else {
+      const b = BLANKS[seg.id];
+      const group = document.createElement('span');
+      group.className = 'blank-group';
+      group.id = 'group-' + seg.id;
+
+      b.opts.forEach((opt, i) => {
+        if (i > 0) {
+          const div = document.createElement('span');
+          div.className = 'blank-divider';
+          group.appendChild(div);
+        }
+
+        const btn = document.createElement('button');
+        btn.className = 'blank-opt';
+        btn.textContent = opt;
+        btn.dataset.blankId = seg.id;
+        btn.dataset.val = opt;
+        btn.onclick = () => pickOpt(seg.id, opt, btn, group);
+        group.appendChild(btn);
+      });
+
+      container.appendChild(group);
+    }
+  });
+}
+
+/* ── 선택 ── */
+function pickOpt(blankId, val, btn, group) {
+  if (checked) return;
+
+  // 같은 그룹 내 모든 버튼 초기화
+  group.querySelectorAll('.blank-opt').forEach(b => b.classList.remove('picked'));
+  btn.classList.add('picked');
+  picks[blankId] = val;
+  group.classList.add('selected');
+
+  // 세 빈칸 모두 선택됐는지 확인
+  const allPicked = Object.values(picks).every(v => v !== null);
+  document.getElementById('btn-check').disabled = !allPicked;
+}
+
+/* ── 정답 확인 ── */
+function checkAnswer() {
+  if (checked) return;
+  checked = true;
+
+  let correctCount = 0;
+
+  BLANKS.forEach(b => {
+    const group = document.getElementById('group-' + b.id);
+    const isRight = picks[b.id] === b.correct;
+    if (isRight) correctCount++;
+
+    group.classList.remove('selected');
+    group.classList.add('locked', isRight ? 'correct' : 'incorrect');
+  });
+
+  const isAllCorrect = correctCount === 3;
+
+  // 피드백
+  if (isAllCorrect) {
+    document.getElementById('fb-ok').style.display = '';
+    document.getElementById('fb-ok').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  } else {
+    document.getElementById('fb-ng').style.display = '';
+    document.getElementById('answer-ref').style.display = '';
+    document.getElementById('fb-ng').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // 결과 행
+  const msgs = ['다시 도전해봐요!', '두 개는 맞았어요!', '거의 다 왔어요!', '완벽합니다!'];
+  document.getElementById('result-num').textContent = correctCount;
+  document.getElementById('result-msg').textContent = msgs[correctCount];
+  const row = document.getElementById('result-row');
+  row.className = 'result-row ' + (isAllCorrect ? 'ok' : 'ng');
+
+  // 버튼 전환
+  document.getElementById('btn-check').style.display = 'none';
+  document.getElementById('btn-reset-sm').style.display = 'none';
+  document.getElementById('btn-retry').style.display = '';
+}
+
+/* ── 다시 풀기 ── */
+function resetFill() {
+  picks[0] = null; picks[1] = null; picks[2] = null;
+  checked = false;
+
+  render();
+
+  document.getElementById('fb-ok').style.display = 'none';
+  document.getElementById('fb-ng').style.display = 'none';
+  document.getElementById('result-row').className = 'result-row';
+  document.getElementById('answer-ref').style.display = 'none';
+  document.getElementById('btn-check').disabled = true;
+  document.getElementById('btn-check').style.display = '';
+  document.getElementById('btn-reset-sm').style.display = '';
+  document.getElementById('btn-retry').style.display = 'none';
+}
+
+/* ── 초기화 ── */
+render();
+</script>
+</body>
+</html>
